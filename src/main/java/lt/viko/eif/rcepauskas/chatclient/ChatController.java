@@ -1,49 +1,34 @@
 package lt.viko.eif.rcepauskas.chatclient;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
-public class MainController {
-    @FXML
-    TextField ip, port, name, message;
-    @FXML
-    Label status;
-    @FXML
-    Button btnConnect, btnSend;
-    @FXML
-    ScrollPane messageList;
-    @FXML
-    public static VBox messageVBox;
+public class ChatController {
 
-    private Client client;
+    @FXML
+    protected TextField ip, port, name, message;
+    @FXML
+    protected Label status;
+    @FXML
+    protected Button btnConnect, btnSend;
+    @FXML
+    protected ListView<String> messageList;
+
+    private Client client = new Client();
 
     @FXML
     protected void connectToServer() {
-
-        if (isConfigurationProvided()) {
-            try {
-                client = new Client(new Socket(ip.getText(), Integer.parseInt(port.getText())), name.getText());
-                onConnect();
-            }
-            catch (Exception e) {
-                status.setText("Can't connect to server");
-            }
-        }
-
-        /*if (!client.isConnected()) {
+        if (!client.isConnected()) {
             if (isConfigurationProvided()) {
                 try {
-                    client = new Client(new Socket(ip.getText(), Integer.parseInt(port.getText())), name.getText());
+                    client = new Client(new Socket(ip.getText(), Integer.parseInt(port.getText())), name.getText(), this);
                     onConnect();
                 }
                 catch (Exception e) {
@@ -59,7 +44,7 @@ public class MainController {
             catch (Exception e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     private void onConnect() {
@@ -72,6 +57,7 @@ public class MainController {
         ip.setDisable(true);
         port.setDisable(true);
         btnSend.setDisable(false);
+        name.setDisable(true);
     }
 
     private void onDisconnect() {
@@ -82,6 +68,7 @@ public class MainController {
         ip.setDisable(false);
         port.setDisable(false);
         btnSend.setDisable(true);
+        name.setDisable(false);
     }
 
     private boolean isConfigurationProvided() {
@@ -91,5 +78,16 @@ public class MainController {
     @FXML
     protected void sendMessage() {
         client.sendMessage(message.getText());
+    }
+
+    public void addItemToList(String message) {
+        Platform.runLater(() -> {
+            messageList.getItems().add(message);
+            messageList.scrollTo(lastIndex(messageList));
+        });
+    }
+
+    public static int lastIndex(ListView listView) {
+        return listView.getItems().size() - 1;
     }
 }
