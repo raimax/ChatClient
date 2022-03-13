@@ -13,6 +13,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(getClass().getResource("listStyles.css").toExternalForm());
         stage.setTitle("Chat client");
         stage.setScene(scene);
         stage.show();

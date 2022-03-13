@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.net.Socket;
 import java.net.URL;
@@ -19,6 +20,8 @@ public class ChatController {
     protected Label status;
     @FXML
     protected Button btnConnect, btnSend;
+    /*@FXML
+    protected Circle btnSend;*/
     @FXML
     protected ListView<String> messageList, onlineUsersList;
 
