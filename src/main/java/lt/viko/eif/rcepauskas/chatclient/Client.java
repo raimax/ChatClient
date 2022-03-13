@@ -11,6 +11,7 @@ import javafx.scene.text.TextFlow;
 
 import java.net.*;
 import java.io.*;
+import java.util.List;
 
 public class Client {
     private Socket clientSocket;
@@ -36,7 +37,7 @@ public class Client {
         }
     }
 
-    public synchronized void close() {
+    public void close() {
         try {
             //in.close();
             //out.close();
@@ -71,8 +72,9 @@ public class Client {
             String messageFromGroupChat;
             while (clientSocket.isConnected()) {
                 try {
-                    messageFromGroupChat = in.readLine();
-                    chatController.addItemToList(messageFromGroupChat);
+                    while ((messageFromGroupChat = in.readLine()) != null) {
+                        chatController.addItemToList(messageFromGroupChat);
+                    }
                 }
                 catch (IOException e) {
                     close();

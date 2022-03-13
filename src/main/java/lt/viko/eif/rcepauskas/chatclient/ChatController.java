@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 
 import java.net.Socket;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChatController {
@@ -19,7 +20,7 @@ public class ChatController {
     @FXML
     protected Button btnConnect, btnSend;
     @FXML
-    protected ListView<String> messageList;
+    protected ListView<String> messageList, onlineUsersList;
 
     private Client client = new Client();
 
@@ -84,6 +85,12 @@ public class ChatController {
         Platform.runLater(() -> {
             messageList.getItems().add(message);
             messageList.scrollTo(lastIndex(messageList));
+        });
+    }
+
+    public void addOnlineUsersToList(List<String> onlineUsers) {
+        Platform.runLater(() -> {
+            onlineUsersList.getItems().addAll(onlineUsers);
         });
     }
 
