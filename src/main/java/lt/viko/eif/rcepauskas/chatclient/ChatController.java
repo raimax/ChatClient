@@ -1,87 +1,61 @@
 package lt.viko.eif.rcepauskas.chatclient;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
-import java.net.Socket;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ChatController {
+public class ChatController implements Initializable {
 
     @FXML
-    protected TextField ip, port, name, message;
+    protected TextField message;
     @FXML
-    protected Label status;
-    @FXML
-    protected Button btnConnect, btnSend;
-    /*@FXML
-    protected Circle btnSend;*/
+    protected Button btnSend;
     @FXML
     protected ListView<String> messageList, onlineUsersList;
+    private Client client;
+    private String username;
 
-    private Client client = new Client();
-
-    @FXML
-    protected void connectToServer() {
-        if (!client.isConnected()) {
-            if (isConfigurationProvided()) {
-                try {
-                    client = new Client(new Socket(ip.getText(), Integer.parseInt(port.getText())), name.getText(), this);
-                    onConnect();
-                }
-                catch (Exception e) {
-                    status.setText("Can't connect to server");
-                }
-            }
-        }
-        else {
-            try {
-                client.close();
-                onDisconnect();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void onConnect() {
-        client.setConnected(true);
-        client.sendMessage(name.getText());
-        client.listenForMessage();
-        status.setText("Connected");
-        status.setTextFill(Color.color(0, 1, 0));
-        btnConnect.setText("Disconnect");
-        ip.setDisable(true);
-        port.setDisable(true);
-        btnSend.setDisable(false);
-        name.setDisable(true);
-    }
-
-    private void onDisconnect() {
-        client.setConnected(false);
-        status.setText("Disconnected");
-        status.setTextFill(Color.color(1, 0, 0));
-        btnConnect.setText("Connect");
-        ip.setDisable(false);
-        port.setDisable(false);
-        btnSend.setDisable(true);
-        name.setDisable(false);
-    }
-
-    private boolean isConfigurationProvided() {
-        return ip.getText().trim().length() > 0 && port.getText().trim().length() > 0 && name.getText().trim() != "";
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Platform.runLater(() -> {
+            onConnect();
+        });
     }
 
     @FXML
     protected void sendMessage() {
         client.sendMessage(message.getText());
+    }
+
+    private void onConnect() {
+        client.sendMessage(username);
+        client.listenForMessage();
+    }
+
+    @FXML
+    private void onDisconnect(ActionEvent event) {
+        client.close();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("connectWindow.fxml"));
+            Parent root = fxmlLoader.load();
+            ConnectController connectController = fxmlLoader.getController();
+            connectController.getStatus().setText("Disconnected");
+            WindowManager.changeStage(event, root);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addItemToList(String message) {
@@ -99,5 +73,13 @@ public class ChatController {
 
     public static int lastIndex(ListView listView) {
         return listView.getItems().size() - 1;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

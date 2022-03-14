@@ -1,24 +1,16 @@
 package lt.viko.eif.rcepauskas.chatclient;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-
-import java.net.*;
-import java.io.*;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class Client {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
     private String username;
-    private boolean isConnected;
     private ChatController chatController;
 
     public Client() {
@@ -39,21 +31,12 @@ public class Client {
 
     public void close() {
         try {
-            //in.close();
-            //out.close();
+            out.close();
             clientSocket.close();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean isConnected() {
-        return isConnected;
-    }
-
-    public void setConnected(boolean connected) {
-        isConnected = connected;
     }
 
     public void sendMessage(String message) {

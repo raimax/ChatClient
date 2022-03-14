@@ -1,0 +1,15 @@
+.btn-send {
+    -fx-background-color: transparent;
+}
+
+.btn-disconnect {
+    -fx-background-color: #777;
+}
+
+.btn-disconnect:hover {
+    -fx-background-color: #CC0033;
+}
+
+.btn {
+    -fx-cursor: hand;
+}

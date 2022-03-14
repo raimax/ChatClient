@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: #222;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lt.viko.eif.rcepauskas.chatclient.ConnectController">
    <center>
       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER">
                <children>
+                  <Label text="Connect to chat server" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin>
+                  </Label>
                   <HBox alignment="CENTER">
                      <children>
-                        <Label alignment="CENTER_RIGHT" prefWidth="60.0" text="Ip:">
+                        <TextField fx:id="ip" prefWidth="200.0" promptText="ip" style="-fx-background-color: #777; -fx-text-fill: #fff;" text="127.0.0.1">
                            <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <TextField prefWidth="200.0">
-                           <HBox.margin>
-                              <Insets bottom="5.0" />
+                              <Insets bottom="10.0" />
                            </HBox.margin>
                         </TextField>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER">
                      <children>
-                        <Label alignment="CENTER_RIGHT" prefWidth="60.0" text="Port:">
+                        <TextField fx:id="port" prefWidth="200.0" promptText="port" style="-fx-background-color: #777; -fx-text-fill: #fff;" text="6666">
                            <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <TextField prefWidth="200.0">
-                           <HBox.margin>
-                              <Insets bottom="5.0" />
+                              <Insets bottom="10.0" />
                            </HBox.margin>
                         </TextField>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER">
                      <children>
-                        <Label alignment="CENTER_RIGHT" prefWidth="60.0" text="Username:">
+                        <TextField fx:id="name" prefWidth="200.0" promptText="username" style="-fx-background-color: #777; -fx-text-fill: #fff;" text="user1">
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets bottom="10.0" />
+                           </HBox.margin></TextField>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnConnect" alignment="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectToServer" text="Connect" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets top="5.0" />
                            </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label fx:id="status" textFill="RED">
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
                         </Label>
-                        <TextField prefWidth="200.0" />
                      </children>
                   </HBox>
                </children>
