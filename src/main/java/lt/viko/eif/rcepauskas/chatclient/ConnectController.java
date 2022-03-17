@@ -35,7 +35,6 @@ public class ConnectController {
                 WindowManager.changeStage(event, root);
             }
             catch (Exception e) {
-                e.printStackTrace();
                 status.setText("Can't connect to server");
             }
         }
@@ -59,5 +58,9 @@ public class ConnectController {
 
     public Label getStatus() {
         return status;
+    }
+
+    public void setName(String name) {
+        this.name.setText(name);
     }
 }

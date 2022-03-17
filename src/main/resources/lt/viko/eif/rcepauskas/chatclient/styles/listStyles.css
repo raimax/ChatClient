@@ -6,4 +6,10 @@
 .list-view {
     -fx-font-family: "sans-serif";
     -fx-font-size: 14;
+
+}
+
+.online-list .list-cell {
+    -fx-background-color: #444;
+    -fx-text-fill: white;
 }

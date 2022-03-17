@@ -1,15 +1,16 @@
 package lt.viko.eif.rcepauskas.chatclient;
 
-import java.io.BufferedReader;
+import lt.viko.eif.rcepauskas.chatclient.SocketMessage.MessageType;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Client {
     private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     private String username;
     private ChatController chatController;
 
@@ -21,45 +22,58 @@ public class Client {
             this.clientSocket = clientSocket;
             this.username = username;
             this.chatController = chatController;
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (IOException ex) {
+            System.out.println("Error in Client: " + ex.getMessage());
         }
     }
 
     public void close() {
         try {
             out.close();
-            clientSocket.close();
+            if (clientSocket.isConnected()) {
+                clientSocket.close();
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception ex) {
+            System.out.println("Error in close: " + ex.getMessage());
         }
     }
 
     public void sendMessage(String message) {
         try {
             if (clientSocket.isConnected()) {
-                out.println(message);
+                out.writeObject(new SocketMessage(MessageType.MESSAGE, message));
             }
         }
-        catch (Exception e) {
+        catch (Exception ex) {
+            System.out.println("Error in sendMessage: " + ex.getMessage());
             close();
         }
     }
 
     public void listenForMessage() {
         Thread thread = new Thread(() -> {
-            String messageFromGroupChat;
+            SocketMessage messageFromGroupChat;
             while (clientSocket.isConnected()) {
                 try {
-                    while ((messageFromGroupChat = in.readLine()) != null) {
-                        chatController.addItemToList(messageFromGroupChat);
+                    while ((messageFromGroupChat = (SocketMessage)in.readObject()) != null) {
+                        if (messageFromGroupChat.getMessageType() == MessageType.MESSAGE) {
+                            chatController.addItemToList(messageFromGroupChat.getMessage());
+                        }
+                        if (messageFromGroupChat.getMessageType() == MessageType.ONLINE_USERS_LIST) {
+                            chatController.addOnlineUsersToList(messageFromGroupChat.getOnlineUsers());
+                        }
                     }
                 }
-                catch (IOException e) {
+                catch (IOException ex) {
+                    close();
+                    break;
+                }
+                catch (ClassNotFoundException ex) {
+                    System.out.println("ClassNotFoundException error in listenForMessage: " + ex.getMessage());
                     close();
                     break;
                 }

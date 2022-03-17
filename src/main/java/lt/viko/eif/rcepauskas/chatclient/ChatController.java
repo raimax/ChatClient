@@ -51,6 +51,7 @@ public class ChatController implements Initializable {
             Parent root = fxmlLoader.load();
             ConnectController connectController = fxmlLoader.getController();
             connectController.getStatus().setText("Disconnected");
+            connectController.setName(username);
             WindowManager.changeStage(event, root);
         }
         catch (IOException e) {
@@ -67,6 +68,7 @@ public class ChatController implements Initializable {
 
     public void addOnlineUsersToList(List<String> onlineUsers) {
         Platform.runLater(() -> {
+            //onlineUsersList.getItems().clear();
             onlineUsersList.getItems().addAll(onlineUsers);
         });
     }
