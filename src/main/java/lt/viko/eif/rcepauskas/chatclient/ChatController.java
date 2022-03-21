@@ -68,7 +68,7 @@ public class ChatController implements Initializable {
 
     public void addOnlineUsersToList(List<String> onlineUsers) {
         Platform.runLater(() -> {
-            //onlineUsersList.getItems().clear();
+            onlineUsersList.getItems().clear();
             onlineUsersList.getItems().addAll(onlineUsers);
         });
     }

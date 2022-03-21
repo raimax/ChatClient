@@ -44,9 +44,7 @@ public class Client {
 
     public void sendMessage(String message) {
         try {
-            if (clientSocket.isConnected()) {
-                out.writeObject(new SocketMessage(MessageType.MESSAGE, message));
-            }
+            out.writeObject(new SocketMessage(MessageType.MESSAGE, message));
         }
         catch (Exception ex) {
             System.out.println("Error in sendMessage: " + ex.getMessage());
@@ -57,27 +55,25 @@ public class Client {
     public void listenForMessage() {
         Thread thread = new Thread(() -> {
             SocketMessage messageFromGroupChat;
-            while (clientSocket.isConnected()) {
-                try {
-                    while ((messageFromGroupChat = (SocketMessage)in.readObject()) != null) {
-                        if (messageFromGroupChat.getMessageType() == MessageType.MESSAGE) {
-                            chatController.addItemToList(messageFromGroupChat.getMessage());
-                        }
-                        if (messageFromGroupChat.getMessageType() == MessageType.ONLINE_USERS_LIST) {
-                            chatController.addOnlineUsersToList(messageFromGroupChat.getOnlineUsers());
-                        }
+
+            try {
+                while ((messageFromGroupChat = (SocketMessage)in.readObject()) != null) {
+                    if (messageFromGroupChat.getMessageType() == MessageType.MESSAGE) {
+                        chatController.addItemToList(messageFromGroupChat.getMessage());
+                    }
+                    if (messageFromGroupChat.getMessageType() == MessageType.ONLINE_USERS_LIST) {
+                        chatController.addOnlineUsersToList(messageFromGroupChat.getOnlineUsers());
                     }
                 }
-                catch (IOException ex) {
-                    close();
-                    break;
-                }
-                catch (ClassNotFoundException ex) {
-                    System.out.println("ClassNotFoundException error in listenForMessage: " + ex.getMessage());
-                    close();
-                    break;
-                }
             }
+            catch (IOException ex) {
+                close();
+            }
+            catch (ClassNotFoundException ex) {
+                System.out.println("ClassNotFoundException error in listenForMessage: " + ex.getMessage());
+                close();
+            }
+
         });
 
         thread.start();
